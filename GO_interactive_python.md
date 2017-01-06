@@ -1,5 +1,5 @@
 # Globus Online - python API
-This tutorial will show you how to use the Globus Online python API. We will use the interactive mode and take you through all steps needed to transfer and monitor data between two endpoints.
+This tutorial will show you how to use the Globus Online python API. We will use the interactive mode of python and take you through all steps needed to transfer and monitor data between two endpoints.
 
 ## Prerequisites
 
@@ -7,7 +7,7 @@ This tutorial will show you how to use the Globus Online python API. We will use
 We assume that you are working on a linux machine.
 You need several accounts and certficates:
 
-- A [globus online account](https://www.globus.o]). Some stepd require to connect to the server cli.globusonline.org via commandline. Athentication on this server works with rsa keys. Please follow the instructions [here](https://docs.globus.org/faq/command-line-interface/#how_do_i_generate_an_ssh_key_to_use_with_the_globus_command_line_interface) to link your globus account to rsa keys and make sure that all servers and personal computers you want to use for this tutorial are setup with a valid public-private key pair.
+- A [globus online account](https://www.globus.o]). Some steps require to connect to the server cli.globusonline.org via commandline. Athentication on this server works with rsa keys. Please follow the instructions [here](https://docs.globus.org/faq/command-line-interface/#how_do_i_generate_an_ssh_key_to_use_with_the_globus_command_line_interface) to link your globus account to rsa keys and make sure that all servers and personal computers you want to use for this tutorial are setup with a valid public-private key pair.
 
 - A grid certificate (usercert.pem and userkey.pem)
 - Access to a proxy server (comes when you obtained an account on ui.grid.sara.nl)
@@ -25,6 +25,7 @@ Authentication on this server is done by rsa key. Please follow the instructions
 
 ### Python libraries
 The python api can be installed via pip:
+
 ```sh
 pip install globusonline --user
 pip install m2crypto --user
@@ -36,21 +37,25 @@ In the following we will show you how to transfer files between the grid UI, the
 
 ## Final checks
 - Make sure you are running globusconnectpersonal on your personal endpoint:
+
 ```sh
 cd <path to globusconnectpersonal>
 $ ./globusconnectpersonal -status
 ```
 - Make sure you installed the python packages
+
 ```sh
 python -c "from globusonline.transfer import api_client; print api_client.__path__"
 ``` 
 - Make sure you have all of the endpoints at hand
+
 ```sh
 $ ssh <globususer>@cli.globusonline.org endpoint-search --scope my-endpoints
 $ ssh <globususer>@cli.globusonline.org endpoint-search --scope all SURFsara
 ```
 
 You should have the following endpoints:
+
 - Your previously added personal endpoint
 - surfsara#dCache_gridftp
 - surfsara#archive
@@ -59,19 +64,21 @@ You should have the following endpoints:
 In this section we will show you how to activate gridFTP endpoints (not your personal endpoint but the actual gridFTP servers).
 To this end you need your grid certficate and access to a proxy server.
 
-The worflow is as follows:
+The workflow is as follows:
 - We will create a proxy on ui.grid.sara.nl
 - You will create a new password for this proxy
 - With the python API we will delegate the proxy to Globus Online and activate the grid endpoint and the archive endpoint. 
 
 ### Check endpoints
-Before we start let us see if all endpoints we need are available.You can get a list of all of your personal endpoints either via the web interface or via the globusconnect personal tools:
+Before we start let us see if all endpoints we need are available. You can get a list of all of your personal endpoints either via the web interface or via the globusconnect personal tools:
+
 ```sh
 $ ssh <globususer>@cli.globusonline.org endpoint-search --scope my-endpoints
 $ ssh <globususer>@cli.globusonline.org endpoint-search --scope all SURFsara
 ```
 
 You should have the following endpoints:
+
 - Your previously added personal endpoint
 - surfsara#dCache_gridftp
 - surfsara#archive
@@ -87,12 +94,14 @@ I.e. we can create the proxy on the user interface machine and then continue wor
 $ ssh <user>@ui.grid.sara.nl
 ```
  
-To transfer data to the archive, it is sufficient to create a proxy without any further specifications
+To transfer data to the archive, it is sufficient to create a proxy without any further specifications.
+
 ```sh
 $ myproxy-init
 ```
 
 The grid works with virtual organisations (VO) and we need to specify our VO and create a proxy that contains this information.
+
 ```sh
 $ startGridSession <VO>
 $ myproxy-init --voms <VO> -l <user>
@@ -220,6 +229,7 @@ True
 ```
 
 A more convenient way to activate an endpoint is:
+
 ```sh
 >>> api.endpoint_autoactivate("surfsara#dCache_gridftp")
 ```
@@ -246,10 +256,12 @@ Try to activate an endpoint you do not have access to and compare the output wit
 >>> api.endpoint_autoactivate("cineca#PICO")
 ```
 The response is unfortunately not very conclusive. The autoactivation fails since we cannot login to this machine. However, the endpoint is activated:
+
 ```
 >>> api.endpoint("cineca#PICO")[2]["activated"]
 True
 ```
+
 > Always check with the autoactivation function that you have access to the machines!
 
 Alternatively, you can also use the web interface of globus and activate the grid and archive endpoints with your proxy and then proceed with transferring data by means of the python API.
