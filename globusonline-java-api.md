@@ -41,7 +41,16 @@ Clone the transfer-api-client-java project from github:
 git clone https://github.com/globusonline/transfer-api-client-java.git
 cd transfer-api-client-java
 ```
+Make sure you incorporate the following classes in your java project to run the transfer api client:
 
+1) **BaseTransferAPIClient**. This class is a basic client for interacting with the Globus Online Transfer API as a single user, using x509 authentication. Does not make any assumptions about how the application will parse data or handle key and trust stores.
+
+2) **BCTransferAPIClient** which is an extension to the base client (class "BaseTransferAPIClient") which supports reading PEM files using Bouncy Castle, so the client cert/key don't have to be converted to PKCS12. 
+
+
+3) **JASONTransferAPIClient** which is a client which parses JSON response into org.json.JSONObject, from json.org.
+
+###Build and Compile
 Use Maven to download the dependencies and build/compile the client tool (this will automatically download the BounyCastle):
 
 ```
